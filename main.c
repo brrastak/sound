@@ -63,6 +63,7 @@ int main()
     
     // Timings
     uint32_t BtnCheckCounter;
+    uint32_t LedBlinkCounter;
     
     TurnLedOff();
     
@@ -75,9 +76,16 @@ int main()
         while (! TransmittedUart())
             ;
         
+        // Wait until button pressed and LED blinking
+        LedBlinkCounter = sys_tick;
         do {
             CheckBtn(&Btn);
             delay_ms(1);
+            
+            if (sys_tick - LedBlinkCounter > 200) {
+                LedBlinkCounter = sys_tick;
+                BlinkLed();
+            }
         }
         while (! WasPressed(&Btn));
 
