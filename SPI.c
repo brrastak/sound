@@ -18,48 +18,48 @@ static int to_transmit = 0;
 static int to_receive = 0;
 
 // Interrupt
-void SPI2_IRQHandler(void)
+void SPI1_IRQHandler(void)
 {
     // Transmit data register empty
-    if ( (SPI2->SR & SPI_SR_TXE) != 0 ) {
+    if ( (SPI1->SR & SPI_SR_TXE) != 0 ) {
         if (to_transmit != 0) {
-            SPI2->DR = transmit_buf[0];
+            SPI1->DR = transmit_buf[0];
             transmit_buf++;
             to_transmit--;
         }
         else
-            SPI2->CR2 &= ~SPI_CR2_TXEIE;    // TX buffer empty interrupt disable
+            SPI1->CR2 &= ~SPI_CR2_TXEIE;    // TX buffer empty interrupt disable
     }
     // Received data register not empty
-    if ((SPI2->SR & SPI_SR_RXNE) != 0) {
+    if ((SPI1->SR & SPI_SR_RXNE) != 0) {
         if (to_receive != 0) {
-            receive_buf[0] = SPI2->DR;
+            receive_buf[0] = SPI1->DR;
             receive_buf++;
             to_receive--;
         }
         else {
-            (void)SPI2->DR;     // clear interrupt flag
+            (void)SPI1->DR;     // clear interrupt flag
         }
     }
 }
 
 void InitSpi(void)
 {
-    // Configuring SPI2 in master mode
-    SPI2->CR1 =     SPI_CR1_BR_0        * 1 |   // baud rate = f_PCLK / (2 * 2^BR)
+    // Configuring SPI1 in master mode
+    SPI1->CR1 =     SPI_CR1_BR_0        * 1 |   // baud rate = f_PCLK / (2 * 2^BR)
                     SPI_CR1_BR_1        * 1 |
                     SPI_CR1_BR_2        * 0;
-    SPI2->CR1 |=    SPI_CR1_CPOL        * 0 |   // clock polarity = 0
+    SPI1->CR1 |=    SPI_CR1_CPOL        * 0 |   // clock polarity = 0
                     SPI_CR1_CPHA        * 0 |   // clock phase = 0
                     SPI_CR1_DFF         * 0 |   // 8-bit data frame format
                     SPI_CR1_LSBFIRST    * 0 |   // MSB transmitted first
                     SPI_CR1_MSTR        * 1 |   // master mode
                     SPI_CR1_SSM         * 1 |   // software NSS enable
                     SPI_CR1_SSI         * 1;    // software NSS up
-    SPI2->CR2 =     SPI_CR2_SSOE        * 1;    // SS output enable
+    SPI1->CR2 =     SPI_CR2_SSOE        * 1;    // SS output enable
     
-    SPI2->CR1 |=    SPI_CR1_SPE;        // SPI enable
-    SPI2->CR2 |=    SPI_CR2_RXNEIE;     // RX buffer not empty interrupt enable
+    SPI1->CR1 |=    SPI_CR1_SPE;        // SPI enable
+    SPI1->CR2 |=    SPI_CR2_RXNEIE;     // RX buffer not empty interrupt enable
     
     DeselectChipSpi();
 }
@@ -70,10 +70,10 @@ void TransmitSpi(uint8_t* buf, int num)
     
     SelectChipSpi();
     
-    SPI2->DR = transmit_buf[0];
+    SPI1->DR = transmit_buf[0];
     transmit_buf++;
     
-    SPI2->CR2 |= SPI_CR2_TXEIE;     // TX buffer empty interrupt enable
+    SPI1->CR2 |= SPI_CR2_TXEIE;     // TX buffer empty interrupt enable
 }
 void ReceiveSpi(uint8_t* buf, int num)
 {
@@ -82,11 +82,11 @@ void ReceiveSpi(uint8_t* buf, int num)
 }
 bool TransmittedSpi(void)
 {
-    return ((SPI2->SR & SPI_SR_BSY) == 0);
+    return ((SPI1->SR & SPI_SR_BSY) == 0);
 }
 bool ReceivedSpi(void)
 {
-    return ((SPI2->SR & SPI_SR_BSY) == 0);
+    return ((SPI1->SR & SPI_SR_BSY) == 0);
 }
 void SelectChipSpi(void)
 {

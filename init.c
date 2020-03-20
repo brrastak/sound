@@ -20,22 +20,27 @@ void InitRcc(void)
     //RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
     // TIM1
     RCC->APB2ENR |= RCC_APB2ENR_TIM1EN;
-    // USART3
-    RCC->APB1ENR |= RCC_APB1ENR_USART3EN;
-    // SPI2
-    RCC->APB1ENR |= RCC_APB1ENR_SPI2EN;
+    // USART1
+    RCC->APB2ENR |= RCC_APB2ENR_USART1EN;
+    // SPI1
+    RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
+    // AFIO
+    RCC->APB2ENR |= RCC_APB2ENR_AFIOEN;
 }
 void InitInterrupt(void)
 {
     // TIM1
     NVIC_EnableIRQ(TIM1_UP_IRQn);
-    // USART3
-    NVIC_EnableIRQ(USART3_IRQn);
-    // SPI2
-    NVIC_EnableIRQ(SPI2_IRQn);
+    // USART1
+    NVIC_EnableIRQ(USART1_IRQn);
+    // SPI1
+    NVIC_EnableIRQ(SPI1_IRQn);
 }
 void InitGpio(void)
 {   
+    // Remap USART
+    AFIO->MAPR |= AFIO_MAPR_USART1_REMAP;
+    
     // Debug LED
     SetGpioMode(LED_PIN, PIN_MODE_2MHZ_OPP);
     
@@ -49,9 +54,10 @@ void InitGpio(void)
     SetGpioMode(USART_RX_PIN, PIN_MODE_IFLOAT);
     
     // TIM1 PWM
-    SetGpioMode(EN_PIN, PIN_MODE_2MHZ_OPP);
-    SetGpioMode(PWM_T1C2, PIN_MODE_2MHZ_AFPP);
-    SetGpioMode(PWM_T1C3, PIN_MODE_2MHZ_AFPP);
+    SetGpioMode(PWM_1P, PIN_MODE_2MHZ_AFOD);
+    SetGpioMode(PWM_2P, PIN_MODE_2MHZ_AFOD);
+    SetGpioMode(PWM_1N, PIN_MODE_2MHZ_AFPP);
+    SetGpioMode(PWM_2N, PIN_MODE_2MHZ_AFPP);
     
     // SPI
     SetGpioMode(SPI_NSS_PIN, PIN_MODE_10MHZ_OPP);

@@ -19,31 +19,31 @@ static volatile bool transmitted = true;
 static volatile bool received = true;
 
 // Interrupt
-void USART3_IRQHandler(void)
+void USART1_IRQHandler(void)
 {
     // Transmit data register empty
-    if ( ((USART3->SR & USART_SR_TXE) != 0 ) &&((USART3->CR1 & USART_CR1_TXEIE) != 0) ) {
+    if ( ((USART1->SR & USART_SR_TXE) != 0 ) &&((USART1->CR1 & USART_CR1_TXEIE) != 0) ) {
         if (to_transmit != 0) {
-            USART3->DR = transmit_buf[0];
+            USART1->DR = transmit_buf[0];
             transmit_buf++;
             to_transmit--;
         }
         else
-            USART3->CR1 &= ~USART_CR1_TXEIE;    // transmit data register empty interrupt disable
+            USART1->CR1 &= ~USART_CR1_TXEIE;    // transmit data register empty interrupt disable
     }
     // Transmission complete
-    if ( ((USART3->SR & USART_SR_TC) != 0) &&((USART3->CR1 & USART_CR1_TCIE) != 0) ) {
+    if ( ((USART1->SR & USART_SR_TC) != 0) &&((USART1->CR1 & USART_CR1_TCIE) != 0) ) {
         transmitted = true;
-        USART3->CR1 &= ~USART_CR1_TCIE;         // transmission complete interrupt disable
+        USART1->CR1 &= ~USART_CR1_TCIE;         // transmission complete interrupt disable
     }
     // Received data register not empty
-    if ((USART3->SR & USART_CR1_RXNEIE) != 0) {
+    if ((USART1->SR & USART_CR1_RXNEIE) != 0) {
         if (received == true) {
-            (void) USART3->DR;  // receive start bit
+            (void) USART1->DR;  // receive start bit
             return;
         }
         if (to_receive != 0) {
-            receive_buf[0] = USART3->DR;
+            receive_buf[0] = USART1->DR;
             receive_buf++;
             to_receive--;
         }
@@ -55,12 +55,12 @@ void USART3_IRQHandler(void)
 
 void InitUart(void)
 {
-    USART3->CR1 |= USART_CR1_UE;    // USART enable
-    USART3->BRR = USART460800;      // set baud rate
-    USART3->CR1 |= USART_CR1_TE;    // transmitter enable
-    USART3->CR1 |= USART_CR1_RE;    // receiver enable
+    USART1->CR1 |= USART_CR1_UE;    // USART enable
+    USART1->BRR = USART460800 * 2;  // set baud rate
+    USART1->CR1 |= USART_CR1_TE;    // transmitter enable
+    USART1->CR1 |= USART_CR1_RE;    // receiver enable
     // Interrupts
-    USART3->CR1 |=  USART_CR1_TXEIE     * 0 |   // transmit data register empty interrupt enable
+    USART1->CR1 |=  USART_CR1_TXEIE     * 0 |   // transmit data register empty interrupt enable
                     USART_CR1_TCIE      * 0 |   // transmission complete interrupt enable
                     USART_CR1_RXNEIE    * 1;    // received data register not empty interrupt enable
 }
@@ -70,11 +70,11 @@ void TransmitUart(uint8_t* buf, int num)
     to_transmit = num - 1;
     transmitted = false;
     
-    USART3->DR = transmit_buf[0];
+    USART1->DR = transmit_buf[0];
     transmit_buf++;
     
-    USART3->CR1 |= USART_CR1_TXEIE;     // transmit data register empty interrupt enable
-    USART3->CR1 |= USART_CR1_TCIE;      // transmission complete interrupt enable
+    USART1->CR1 |= USART_CR1_TXEIE;     // transmit data register empty interrupt enable
+    USART1->CR1 |= USART_CR1_TCIE;      // transmission complete interrupt enable
 }
 void ReceiveUart(uint8_t* buf, int num)
 {

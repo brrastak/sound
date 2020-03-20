@@ -66,6 +66,7 @@ int main()
     uint32_t LedBlinkCounter;
     
     TurnLedOff();
+    delay_ms(500);
     
     // Rewrite memory from audio file
     if (GetJumperState()) {
@@ -97,6 +98,8 @@ int main()
         
         EraseMemory();
         WaitForNotBusy();
+        
+        delay_ms(100);
         
         // "Erasing done. Send file\n\r"
         TurnLedOn();
@@ -172,6 +175,6 @@ int main()
 
 bool GetJumperState()
 {
-    return ! GetPinState(JUMPER_PIN);
+    return GetPinState(JUMPER_PIN);
 }
 

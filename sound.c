@@ -72,12 +72,10 @@ void UpdateSample(void)
 void TurnSoundOn(void)
 {
     on_off = true;
-    SetPin(EN_PIN);
 }
 void TurnSoundOff(void)
 {
     on_off = false;
-    ResetPin(EN_PIN);
 }
 // Start playing track from memory (address mem_addr)
 void StartTrack(uint32_t mem_addr)

@@ -10,22 +10,23 @@
 
 // Ports and pin numbers
 // Button
-#define BTN_PIN                 GPIOB, 7
+#define BTN_PIN                 GPIOA, 1
 // Jumper
-#define JUMPER_PIN              GPIOA, 7
+#define JUMPER_PIN              GPIOB, 9
 // Onboard LED
 #define LED_PIN                 GPIOC, 13
 // USART
-#define USART_TX_PIN            GPIOB, 10
-#define USART_RX_PIN            GPIOB, 11
+#define USART_TX_PIN            GPIOB, 6
+#define USART_RX_PIN            GPIOB, 7
 // SPI
-#define SPI_NSS_PIN             GPIOB, 12
-#define SPI_SCK_PIN             GPIOB, 13
-#define SPI_MISO_PIN            GPIOB, 14
-#define SPI_MOSI_PIN            GPIOB, 15
-// TIM1 outputs for H-bridge PWM
-#define EN_PIN                  GPIOB, 6
-#define PWM_T1C2                GPIOA, 9
-#define PWM_T1C3                GPIOA, 10
+#define SPI_NSS_PIN             GPIOA, 4
+#define SPI_SCK_PIN             GPIOA, 5
+#define SPI_MISO_PIN            GPIOA, 6
+#define SPI_MOSI_PIN            GPIOA, 7
+// TIM1 outputs for full-bridge PWM
+#define PWM_1P                  GPIOA, 8
+#define PWM_2P                  GPIOA, 9
+#define PWM_1N                  GPIOB, 13
+#define PWM_2N                  GPIOB, 14
 
 #endif
