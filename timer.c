@@ -150,7 +150,7 @@ void InitTim1(void)
     TIM1->CCR1 = 0;             // channel 1 duty time = 0%
     TIM1->CCR2 = 0;             // channel 2 duty time = 0%
     
-    TIM1->BDTR =    0x04 |                      // dead time
+    TIM1->BDTR =    0x30 |                      // dead time
                     TIM_BDTR_MOE        * 1;    // main output enable
     
     // Generate update event
@@ -165,12 +165,12 @@ void InitTim1(void)
 void SetTim1DutyTime(uint16_t duty)
 {
     if (duty >= 128) {
-        TIM1->CCR2 = (duty - 128) & 0xFF;
-        TIM1->CCR3 = 0;
+        TIM1->CCR1 = (duty - 128) & 0xFF;
+        TIM1->CCR2 = 0;
     }
     else {
-        TIM1->CCR2 = 0;
-        TIM1->CCR3 = (128 - duty) & 0xFF;
+        TIM1->CCR1 = 0;
+        TIM1->CCR2 = (128 - duty) & 0xFF;
     }
 }
 
